@@ -4,6 +4,8 @@ An interactive music experience that transforms your hand gestures into beautifu
 
 ## ✨ Features
 
+- **🌌 NEW: 3D Spatial Music System**: Enhanced hand tracking with spatial audio zones and 3D positioning
+- **🎨 Advanced Particle System**: Dynamic visual effects following hand trajectories  
 - **Hand Gesture Recognition**: Advanced MediaPipe-powered hand tracking
 - **Multiple Music Styles**: Pop, Jazz, Blues, Classical, Rock, and Ambient
 - **Professional UI**: Modern glassmorphism design with intuitive controls
@@ -15,14 +17,23 @@ An interactive music experience that transforms your hand gestures into beautifu
 
 1. **Allow Camera Access**: Grant permission for hand tracking
 2. **Position Your Hands**: Hold hands in front of the camera
-3. **Make Music**: Different finger positions trigger various instruments:
-   - **Index Finger**: Piano
-   - **Middle Finger**: Guitar
-   - **Ring Finger**: Violin
-   - **Pinky**: Saxophone
-   - **Thumb**: Drums
-4. **Change Styles**: Use the settings panel or press `Space` to cycle through music styles
-5. **Adjust Settings**: Click the gear icon to customize your experience
+3. **Toggle 3D Mode**: Press `D` to enable enhanced 3D spatial music system
+4. **Make Music**: Different finger positions trigger various instruments:
+   - **Left Hand (Rhythm)**: Drums, Bass, Piano, Guitar, Percussion
+   - **Right Hand (Melody)**: Violin, Trumpet, Flute, Saxophone, Harp
+5. **Explore Spatial Zones**: Move hands through different 3D areas for unique instruments and effects
+6. **Change Styles**: Use the settings panel or press `Space` to cycle through music styles
+7. **Adjust Settings**: Click the gear icon to customize your experience
+
+## 🌌 3D Spatial Features
+
+- **Spatial Audio Zones**: Different 3D areas trigger unique instruments and effects
+- **Depth Control**: Z-axis movement controls reverb, delay, and filtering
+- **Harmonic Resonance**: Synchronized hand movements create harmonic overtones
+- **Trail Visualization**: Colorful particle trails follow hand movements
+- **Zone Effects**: Visual feedback when entering different musical zones
+
+> **📖 For detailed 3D features guide, see [README_3D.md](README_3D.md)**
 
 ## 🎼 Music Styles
 

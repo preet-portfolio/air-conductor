@@ -1,5 +1,8 @@
 import { initHandTracker, onFrame, type NormalizedLandmarkList } from './tracking';
 import { MusicEngine } from './music';
+import { Enhanced3DMusicEngine } from './music3d';
+import { SpatialMusicEngine, SPATIAL_ZONES } from './spatial3d';
+import { ElegantParticleEngine } from './elegant-particles';
 import { estimateBeat, BeatEstimatorState } from './tempo';
 import { detectAllFingerGestures, createGestureState } from './gestures';
 
@@ -364,11 +367,58 @@ function showWelcome() {
 }
 
 const engine = new MusicEngine();
+const engine3D = new Enhanced3DMusicEngine();
+const spatialEngine = new SpatialMusicEngine();
+const particleEngine = new ElegantParticleEngine(overlay);
 const beatState: BeatEstimatorState = { lastY: null, lastDirection: null, lastBeatTime: null, intervals: [] };
 const gestureState = createGestureState();
 
+// Connect particle engine to audio analysis (only when 3D mode is used)
+let audioConnected = false;
+
 let activeInstruments = new Set<string>();
 const gestureEnergyHistory: number[] = [];
+let use3DMode = true; // Start with cosmic 3D mode enabled for celestial effects
+
+// Simple performance monitoring
+let frameCount = 0;
+let lastFpsCheck = performance.now();
+let currentFps = 60;
+
+// Add 3D mode toggle function
+function toggle3DMode() {
+  use3DMode = !use3DMode;
+  
+  // Connect audio analysis only when needed
+  if (use3DMode && !audioConnected) {
+    particleEngine.setAudioAnalyser(engine3D.getAnalyser());
+    audioConnected = true;
+  }
+  
+  const notification = document.createElement('div');
+  notification.className = 'mode-notification';
+  notification.innerHTML = `
+    <div style="font-size: 1.2rem; margin-bottom: 4px;">${use3DMode ? '🌌 3D Spatial Mode' : '🎵 Classic Mode'}</div>
+    <div style="font-size: 0.9rem; opacity: 0.8;">${use3DMode ? 'Enhanced with 3D positioning and effects' : 'Traditional finger-based control'}</div>
+  `;
+  notification.style.cssText = `
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: rgba(0,0,0,0.8);
+    color: white;
+    padding: 16px 24px;
+    border-radius: 16px;
+    font-weight: 600;
+    z-index: 1000;
+    animation: fadeInOut 4s ease-in-out;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+  `;
+  
+  document.body.appendChild(notification);
+  setTimeout(() => notification.remove(), 4000);
+}
 
 // Enhanced AI Music Style Controls with more variety
 const musicStyles = ['pop', 'jazz', 'blues', 'classical', 'rock', 'ambient'];
@@ -417,11 +467,14 @@ function cycleMusicStyle() {
   setTimeout(() => notification.remove(), 4000);
 }
 
-// Add style cycling on space key
+// Add style cycling on space key and 3D mode toggle on 'D' key
 document.addEventListener('keydown', (e) => {
   if (e.code === 'Space') {
     e.preventDefault();
     cycleMusicStyle();
+  } else if (e.code === 'KeyD') {
+    e.preventDefault();
+    toggle3DMode();
   }
 });
 
@@ -480,6 +533,14 @@ async function start() {
     updateStatus('Loading camera...', 'loading');
     await initHandTracker(video);
     console.log('Hand tracker initialized successfully');
+    
+    // Connect audio analysis for 3D mode since it's enabled by default
+    if (use3DMode && !audioConnected) {
+      particleEngine.setAudioAnalyser(engine3D.getAnalyser());
+      audioConnected = true;
+      console.log('Audio analysis connected for cosmic effects');
+    }
+    
     updateStatus('Ready - show your hands! ✨', 'success');
     
     // Show welcome modal on first load
@@ -491,15 +552,30 @@ async function start() {
   }
 
   onFrame((hands: NormalizedLandmarkList[]) => {
+    // Simple performance monitoring
+    frameCount++;
+    const currentTime = performance.now();
+    if (currentTime - lastFpsCheck > 1000) { // Check every second
+      currentFps = frameCount;
+      frameCount = 0;
+      lastFpsCheck = currentTime;
+      
+      // Automatically disable 3D mode if FPS drops too low
+      if (currentFps < 30 && use3DMode) {
+        console.warn('Low FPS detected, consider disabling 3D mode for better performance');
+      }
+    }
+    
     const ctx = overlay.getContext('2d')!;
     overlay.width = video.videoWidth;
     overlay.height = video.videoHeight;
-    ctx.clearRect(0,0,overlay.width, overlay.height);
 
     if (!hands.length) {
       engine.releaseAll();
       updateStatus('👋 No hands detected - show your hands!', 'loading');
       updateActiveInstruments([]);
+      // Clear canvas when no hands
+      ctx.clearRect(0, 0, overlay.width, overlay.height);
       return;
     }
 
@@ -529,6 +605,32 @@ async function start() {
 
     // Clear canvas with dynamic background
     ctx.clearRect(0, 0, overlay.width, overlay.height);
+    
+    // Update 3D spatial music system (only when 3D mode is enabled)
+    if (use3DMode) {
+      const spatialState = spatialEngine.update(left, right);
+      engine3D.updateSpatialState(spatialState);
+      
+      // Update elegant particle system smoothly
+      particleEngine.update(16.67); // 60fps target
+      
+      // Create elegant constellations for active zones
+      if (performance.now() % 60 < 1) { // Every ~60 frames for subtle effect
+        SPATIAL_ZONES.forEach(zone => {
+          const leftInZone = spatialState.currentZones.left?.id === zone.id;
+          const rightInZone = spatialState.currentZones.right?.id === zone.id;
+          const active = leftInZone || rightInZone;
+          
+          if (active) {
+            const centerX = (zone.bounds.x[0] + zone.bounds.x[1]) / 2;
+            const centerY = (zone.bounds.y[0] + zone.bounds.y[1]) / 2;
+            const size = Math.abs(zone.bounds.x[1] - zone.bounds.x[0]) * 0.5;
+            
+            particleEngine.createConstellation(centerX, centerY, size, zone.color);
+          }
+        });
+      }
+    }
     
     // Add dynamic background effects for abstract mode
     if (currentVisualMode === 'abstract') {
@@ -675,13 +777,78 @@ async function start() {
     const activeInstrumentNames: string[] = [];
     fingerGestures.forEach(gesture => {
       if (gesture.active && gesture.note) {
+        // Always use original engine for backwards compatibility
         engine.playInstrument(gesture.instrument, gesture.note, gesture.velocity);
-        activeInstrumentNames.push(gesture.instrument);
         
-        // Create particles at finger positions for active gestures
+        // Use 3D engine for enhanced spatial audio when enabled
+        if (use3DMode) {
+          const isLeft = gesture.finger.startsWith('left_');
+          const hand = isLeft ? left : right;
+          if (hand) {
+            const fingerIndex = ['thumb', 'index', 'middle', 'ring', 'pinky']
+              .indexOf(gesture.finger.split('_')[1]);
+            const fingertipIndex = [4, 8, 12, 16, 20][fingerIndex];
+            const fingertip = hand[fingertipIndex];
+            
+            if (fingertip) {
+              // Play with 3D positioning
+              engine3D.play3DInstrument(
+                gesture.instrument, 
+                gesture.note, 
+                gesture.velocity,
+                { x: fingertip.x, y: fingertip.y, z: fingertip.z }
+              );
+              
+              // Create elegant note particles with controlled frequency
+              if (Math.random() < 0.15) { // Reduced from 0.3 to prevent overwhelming
+                particleEngine.createNoteParticle(
+                  fingertip.x, 
+                  fingertip.y, 
+                  fingertip.z, 
+                  gesture.instrument,
+                  gesture.note,
+                  gesture.velocity
+                );
+              }
+              
+              // Create elegant energy field around active fingertips
+              if (Math.random() < 0.08) {
+                particleEngine.createEnergyField(
+                  fingertip.x,
+                  fingertip.y,
+                  fingertip.z,
+                  gesture.velocity,
+                  isLeft ? 'left' : 'right'
+                );
+              }
+              
+              // Create elegant trail particles for smooth movement visualization
+              if (Math.random() < 0.1) { // Controlled frequency
+                const trajectories = spatialEngine.getTrajectories();
+                const trajectory = isLeft ? trajectories.left : trajectories.right;
+                if (trajectory.length > 1) {
+                  const lastPos = trajectory[trajectory.length - 1];
+                  const velocity = lastPos.velocity;
+                  
+                  if (velocity > 0.015) { // Moderate threshold
+                    particleEngine.createTrailParticle(
+                      fingertip.x, 
+                      fingertip.y, 
+                      fingertip.z, 
+                      velocity, 
+                      isLeft ? 'left' : 'right'
+                    );
+                  }
+                }
+              }
+            }
+          }
+        }
+        
+        // Create legacy particles (reduced frequency for performance)
         const isLeft = gesture.finger.startsWith('left_');
         const hand = isLeft ? left : right;
-        if (hand) {
+        if (hand && Math.random() < 0.08) { // Reduced from 0.15 to 0.08
           const fingerIndex = ['thumb', 'index', 'middle', 'ring', 'pinky']
             .indexOf(gesture.finger.split('_')[1]);
           const fingertipIndex = [4, 8, 12, 16, 20][fingerIndex];
@@ -692,16 +859,35 @@ async function start() {
             const y = fingertip.y * overlay.height;
             const data = INSTRUMENT_DATA[gesture.instrument as keyof typeof INSTRUMENT_DATA];
             
-            // Create particles more frequently for better visual feedback
-            if (Math.random() < 0.15) { // 15% chance per frame
-              createParticle(x, y, data.color);
-            }
+            // Create legacy particles for compatibility
+            createParticle(x, y, data.color);
           }
         }
+        
+        activeInstrumentNames.push(gesture.instrument);
       } else if (!gesture.active) {
         engine.releaseInstrument(gesture.instrument);
       }
     });
+    
+    // Create elegant harmonic resonance when hands work together
+    if (use3DMode && Math.random() < 0.12) { // Controlled frequency for elegance
+      const musicalParams = spatialEngine.getMusicalParameters();
+      if (musicalParams.harmonicResonance > 0.5 && musicalParams.handDistance < 0.4) { // Relaxed but meaningful thresholds
+        const leftTraj = spatialEngine.getTrajectories().left;
+        const rightTraj = spatialEngine.getTrajectories().right;
+        const leftPos = leftTraj[leftTraj.length - 1];
+        const rightPos = rightTraj[rightTraj.length - 1];
+        
+        if (leftPos && rightPos) {
+          const centerX = (leftPos.x + rightPos.x) / 2;
+          const centerY = (leftPos.y + rightPos.y) / 2;
+          const centerZ = (leftPos.z + rightPos.z) / 2;
+          
+          particleEngine.createHarmonyParticle(centerX, centerY, centerZ, musicalParams.harmonicResonance);
+        }
+      }
+    }
 
     // Update active instruments display
     updateActiveInstruments(activeInstrumentNames);

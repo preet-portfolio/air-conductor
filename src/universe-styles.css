@@ -1,0 +1,552 @@
+/**
+ * 🌌 MUSICAL UNIVERSE 2025 - Revolutionary Design System
+ * State-of-the-art CSS that creates an immersive musical cosmos
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* 🎨 2025 Color Palette - Dynamic and Alive */
+  --cosmic-primary: #4ECDC4;
+  --cosmic-secondary: #FF6B9D;
+  --cosmic-tertiary: #45B7D1;
+  --cosmic-accent: #96CEB4;
+  --cosmic-warning: #FECA57;
+  --cosmic-energy: #FF9FF3;
+  
+  /* 🌌 Nebula Colors */
+  --nebula-rhythm: linear-gradient(135deg, #FF6B9D, #C44569);
+  --nebula-melody: linear-gradient(135deg, #4ECDC4, #26de81);
+  --nebula-harmony: linear-gradient(135deg, #45B7D1, #3742fa);
+  
+  /* 🌠 Dynamic Gradients */
+  --cosmic-bg-primary: radial-gradient(circle at 30% 40%, 
+    hsla(280, 40%, 15%, 0.9) 0%,
+    hsla(230, 35%, 12%, 0.7) 40%,
+    hsla(200, 30%, 8%, 0.5) 80%,
+    hsla(220, 25%, 5%, 0.3) 100%);
+    
+  --glass-cosmic: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  
+  /* ✨ Animation Properties */
+  --anim-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --anim-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --anim-elastic: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* 🌌 Universal Cosmic Foundation */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Space Grotesk', -apple-system, sans-serif;
+  background: var(--cosmic-bg-primary);
+  overflow: hidden;
+  color: white;
+  font-feature-settings: 'liga' 1, 'kern' 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+  cursor: none; /* Hide cursor for immersive experience */
+}
+
+/* 🎵 Main Universe Container */
+#app {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--cosmic-bg-primary);
+  animation: cosmicBreathe 20s ease-in-out infinite;
+}
+
+@keyframes cosmicBreathe {
+  0%, 100% { 
+    filter: brightness(1) saturate(1);
+    transform: scale(1);
+  }
+  50% { 
+    filter: brightness(1.1) saturate(1.2);
+    transform: scale(1.01);
+  }
+}
+
+/* 🌟 Cosmic Canvas - Full Screen Universe */
+#universe-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  filter: blur(0px);
+  transition: filter 0.5s var(--anim-smooth);
+}
+
+/* 🎭 Revolutionary Video Integration - Floating Orb */
+#video {
+  position: absolute;
+  bottom: 40px;
+  right: 40px;
+  width: 180px;
+  height: 140px;
+  border-radius: 50%;
+  border: 3px solid var(--cosmic-primary);
+  transform: scaleX(-1);
+  object-fit: cover;
+  z-index: 20;
+  
+  /* Cosmic glow effect */
+  box-shadow: 
+    0 0 30px var(--cosmic-primary),
+    0 0 60px rgba(78, 205, 196, 0.3),
+    inset 0 0 20px rgba(255, 255, 255, 0.1);
+  
+  animation: videoOrbitGlow 3s ease-in-out infinite alternate;
+  transition: all 0.3s var(--anim-smooth);
+}
+
+@keyframes videoOrbitGlow {
+  0% {
+    box-shadow: 
+      0 0 30px var(--cosmic-primary),
+      0 0 60px rgba(78, 205, 196, 0.3);
+    transform: scaleX(-1) scale(1);
+  }
+  100% {
+    box-shadow: 
+      0 0 40px var(--cosmic-secondary),
+      0 0 80px rgba(255, 107, 157, 0.4);
+    transform: scaleX(-1) scale(1.05);
+  }
+}
+
+#video:hover {
+  border-color: var(--cosmic-secondary);
+  transform: scaleX(-1) scale(1.1);
+}
+
+/* 🎼 Revolutionary HUD System - Floating Elements */
+.cosmic-hud {
+  position: absolute;
+  z-index: 15;
+  background: var(--glass-cosmic);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  box-shadow: var(--glass-shadow);
+  padding: 20px;
+  transition: all 0.3s var(--anim-smooth);
+  animation: floatIn 1s var(--anim-bounce);
+}
+
+@keyframes floatIn {
+  0% {
+    opacity: 0;
+    transform: translateY(50px) scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.cosmic-hud:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--cosmic-primary);
+  transform: translateY(-5px);
+  box-shadow: 
+    var(--glass-shadow),
+    0 20px 40px rgba(78, 205, 196, 0.2);
+}
+
+/* 🌟 Header - Floating Title */
+.header-hud {
+  top: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  background: linear-gradient(135deg, 
+    rgba(78, 205, 196, 0.1) 0%,
+    rgba(255, 107, 157, 0.1) 100%);
+}
+
+.cosmic-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--cosmic-primary), var(--cosmic-secondary));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 30px rgba(78, 205, 196, 0.5);
+  animation: titlePulse 4s ease-in-out infinite;
+}
+
+@keyframes titlePulse {
+  0%, 100% { 
+    text-shadow: 0 0 30px rgba(78, 205, 196, 0.5);
+    filter: brightness(1);
+  }
+  50% { 
+    text-shadow: 0 0 50px rgba(255, 107, 157, 0.7);
+    filter: brightness(1.2);
+  }
+}
+
+/* 🎯 Status Indicator - Floating */
+.status-hud {
+  top: 30px;
+  left: 30px;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--cosmic-primary);
+  animation: statusPulse 2s ease-in-out infinite;
+  box-shadow: 0 0 20px currentColor;
+}
+
+@keyframes statusPulse {
+  0%, 100% { 
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  50% { 
+    transform: scale(1.3);
+    opacity: 1;
+  }
+}
+
+/* 🎵 Revolutionary Instrument Display - Floating Constellation */
+.instruments-constellation {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.instrument-orb {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--glass-cosmic), rgba(255, 255, 255, 0.1));
+  backdrop-filter: blur(15px);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s var(--anim-smooth);
+  cursor: pointer;
+  pointer-events: all;
+  animation: orbFloat 6s ease-in-out infinite;
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+@keyframes orbFloat {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-10px) rotate(1deg); }
+  66% { transform: translateY(5px) rotate(-1deg); }
+}
+
+.instrument-orb:hover {
+  transform: scale(1.2) translateY(-10px);
+  border-color: var(--cosmic-primary);
+  box-shadow: 
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 0 30px var(--cosmic-primary),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.instrument-orb.active {
+  background: linear-gradient(135deg, var(--cosmic-primary), var(--cosmic-secondary));
+  border-color: white;
+  animation: orbActive 2s ease-in-out infinite;
+}
+
+@keyframes orbActive {
+  0%, 100% { 
+    transform: scale(1.1);
+    box-shadow: 0 0 40px var(--cosmic-primary);
+  }
+  50% { 
+    transform: scale(1.2);
+    box-shadow: 0 0 60px var(--cosmic-secondary);
+  }
+}
+
+.instrument-emoji {
+  font-size: 2rem;
+  margin-bottom: 4px;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.instrument-name {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-align: center;
+  opacity: 0.9;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* 🌌 Nebula Zones - Dynamic Areas */
+.nebula-zone {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, 
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 50%,
+    transparent 100%);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  transition: all 0.5s var(--anim-smooth);
+  pointer-events: none;
+  animation: nebulaBreath 8s ease-in-out infinite;
+}
+
+@keyframes nebulaBreath {
+  0%, 100% { 
+    transform: scale(1);
+    opacity: 0.3;
+  }
+  50% { 
+    transform: scale(1.05);
+    opacity: 0.6;
+  }
+}
+
+.nebula-zone.rhythm {
+  background: radial-gradient(circle, 
+    rgba(255, 107, 157, 0.2) 0%,
+    rgba(196, 69, 105, 0.1) 50%,
+    transparent 100%);
+  border-color: var(--cosmic-secondary);
+}
+
+.nebula-zone.melody {
+  background: radial-gradient(circle, 
+    rgba(78, 205, 196, 0.2) 0%,
+    rgba(38, 222, 129, 0.1) 50%,
+    transparent 100%);
+  border-color: var(--cosmic-primary);
+}
+
+.nebula-zone.active {
+  transform: scale(1.2);
+  opacity: 0.8;
+  border-color: white;
+  box-shadow: 0 0 50px currentColor;
+  animation: nebulaActive 1s ease-in-out infinite alternate;
+}
+
+@keyframes nebulaActive {
+  0% { 
+    box-shadow: 0 0 50px currentColor;
+  }
+  100% { 
+    box-shadow: 0 0 100px currentColor;
+  }
+}
+
+/* 🎛️ Settings - Floating Control Panel */
+.settings-panel {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 20px;
+  padding: 20px 30px;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 100%);
+  backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 25px;
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  animation: panelSlideUp 0.8s var(--anim-bounce);
+}
+
+@keyframes panelSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(100px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.cosmic-button {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, var(--glass-cosmic), rgba(255, 255, 255, 0.1));
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  color: white;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s var(--anim-smooth);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.cosmic-button::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--cosmic-primary), var(--cosmic-secondary));
+  opacity: 0;
+  transition: opacity 0.3s var(--anim-smooth);
+}
+
+.cosmic-button:hover::before {
+  opacity: 1;
+}
+
+.cosmic-button:hover {
+  transform: translateY(-3px) scale(1.05);
+  border-color: var(--cosmic-primary);
+  box-shadow: 
+    0 15px 35px rgba(0, 0, 0, 0.3),
+    0 0 30px rgba(78, 205, 196, 0.4);
+}
+
+.cosmic-button span {
+  position: relative;
+  z-index: 1;
+}
+
+/* ✨ Particle Effects */
+.particle {
+  position: absolute;
+  pointer-events: none;
+  z-index: 5;
+  animation: particleFloat 3s ease-out forwards;
+}
+
+@keyframes particleFloat {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(0);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(-50px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-100px) scale(0.5);
+  }
+}
+
+/* 🎵 Musical Note Animations */
+.musical-note {
+  position: absolute;
+  font-size: 24px;
+  color: var(--cosmic-primary);
+  text-shadow: 0 0 20px currentColor;
+  animation: noteFloat 4s ease-out forwards;
+  pointer-events: none;
+  z-index: 8;
+}
+
+@keyframes noteFloat {
+  0% {
+    opacity: 1;
+    transform: translateY(0) rotateZ(0deg) scale(0.5);
+  }
+  50% {
+    opacity: 0.8;
+    transform: translateY(-80px) rotateZ(180deg) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-160px) rotateZ(360deg) scale(0.3);
+  }
+}
+
+/* 📱 Responsive Design */
+@media (max-width: 768px) {
+  .cosmic-title {
+    font-size: 2rem;
+  }
+  
+  .instrument-orb {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .instrument-emoji {
+    font-size: 1.5rem;
+  }
+  
+  .settings-panel {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px 20px;
+  }
+  
+  #video {
+    width: 120px;
+    height: 90px;
+    bottom: 20px;
+    right: 20px;
+  }
+}
+
+/* 🌟 Loading Animation */
+.cosmic-loader {
+  position: fixed;
+  inset: 0;
+  background: var(--cosmic-bg-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeOut 1s ease-out 2s forwards;
+}
+
+.loader-orb {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--cosmic-primary), var(--cosmic-secondary));
+  animation: loaderPulse 1.5s ease-in-out infinite;
+  box-shadow: 0 0 50px var(--cosmic-primary);
+}
+
+@keyframes loaderPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
