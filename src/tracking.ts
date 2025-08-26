@@ -67,10 +67,38 @@ async function loop() {
       const now = performance.now();
       const result: HandLandmarkerResult = handLandmarker.detectForVideo(video, now);
       
-      // Convert landmarks and ensure they're valid
-      const hands: NormalizedLandmarkList[] = (result.landmarks || [])
-        .filter(lm => lm && lm.length === 21) // Ensure we have all 21 hand landmarks
-        .map(lm => lm.map(p => ({ x: p.x, y: p.y, z: p.z || 0 })));
+      // 🚀 AGGRESSIVE FIX: Accept ANY hand landmarks for immediate music
+      let hands: NormalizedLandmarkList[] = [];
+      
+      if (result.landmarks && result.landmarks.length > 0) {
+        // Try normal filtering first
+        hands = result.landmarks
+          .filter(lm => lm && lm.length >= 21)
+          .map(lm => lm.slice(0, 21).map(p => ({ x: p.x, y: p.y, z: p.z || 0 })));
+        
+        // If no hands pass the filter, try more lenient approach
+        if (hands.length === 0) {
+          console.warn('🔥 EMERGENCY: Using lenient hand detection for music');
+          hands = result.landmarks
+            .filter(lm => lm && lm.length >= 10) // Accept hands with at least 10 landmarks
+            .map(lm => {
+              // Pad missing landmarks with reasonable defaults
+              const padded = [...lm];
+              while (padded.length < 21) {
+                const last = padded[padded.length - 1];
+                padded.push({ x: last.x, y: last.y, z: last.z || 0 });
+              }
+              return padded.slice(0, 21).map(p => ({ x: p.x, y: p.y, z: p.z || 0 }));
+            });
+        }
+        
+        // Debug logging
+        console.log(`👍 MediaPipe: ${result.landmarks.length} raw hands -> ${hands.length} processed hands`);
+        if (hands.length === 0) {
+          console.error('⚠️ NO HANDS PASSED TO MUSIC SYSTEM! Raw counts:', 
+            result.landmarks.map(lm => `${lm?.length || 0} landmarks`));
+        }
+      }
       
       // Call callbacks synchronously to avoid frame timing issues
       for (const cb of callbacks) {
