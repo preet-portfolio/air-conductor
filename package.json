@@ -1,8 +1,31 @@
 {
   "name": "air-conductor",
-  "version": "0.1.0",
+  "version": "1.0.0",
+  "description": "🎵 Gesture-controlled music creation tool that transforms hand movements into music using AI-powered computer vision",
   "private": true,
   "type": "module",
+  "keywords": [
+    "music",
+    "gesture-control",
+    "hand-tracking",
+    "mediapipe",
+    "computer-vision",
+    "audio-synthesis",
+    "interactive-music",
+    "web-audio",
+    "typescript",
+    "tone.js"
+  ],
+  "author": "Air Conductor Project",
+  "license": "MIT",
+  "homepage": "https://preet-portfolio.github.io/air-conductor/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/preet-portfolio/air-conductor.git"
+  },
+  "bugs": {
+    "url": "https://github.com/preet-portfolio/air-conductor/issues"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
